@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Plano {
+  id          Int         @id @default(autoincrement())
+  nome        String      @db.VarChar(100)
+  preco       Decimal     @db.Decimal(10, 2)
+  duracaoDias Int         @map("duracao_dias")
+  matriculas  Matricula[]
+
+  @@map("planos")
+}
+
+model Aluno {
+  id             Int         @id @default(autoincrement())
+  nome           String      @db.VarChar(150)
+  cpf            String      @unique(map: "uk_alunos_cpf") @db.VarChar(14)
+  email          String      @db.VarChar(150)
+  dataNascimento DateTime    @map("data_nascimento") @db.Date
+  status         AlunoStatus @default(ativo)
+  plano          String?     @default("Mensal") @db.VarChar(50)
+  matriculas     Matricula[]
+
+  @@map("alunos")
+}
+
+model Matricula {
+  id         Int         @id @default(autoincrement())
+  alunoId    Int         @map("aluno_id")
+  planoId    Int         @map("plano_id")
+  dataInicio DateTime    @map("data_inicio") @db.Date
+  dataFim    DateTime?   @map("data_fim") @db.Date
+  aluno      Aluno       @relation(fields: [alunoId], references: [id], onUpdate: Restrict, map: "matriculas_ibfk_1")
+  plano      Plano       @relation(fields: [planoId], references: [id], onUpdate: Restrict, map: "matriculas_ibfk_2")
+  pagamentos Pagamento[]
+
+  @@index([alunoId], map: "aluno_id")
+  @@index([planoId], map: "plano_id")
+  @@map("matriculas")
+}
+
+model Pagamento {
+  id              Int             @id @default(autoincrement())
+  matriculaId     Int             @map("matricula_id")
+  valor           Decimal         @db.Decimal(10, 2)
+  dataVencimento  DateTime        @map("data_vencimento") @db.Date
+  statusPagamento StatusPagamento @default(pendente) @map("status_pagamento")
+  matricula       Matricula       @relation(fields: [matriculaId], references: [id], onUpdate: Restrict, map: "pagamentos_ibfk_1")
+
+  @@index([matriculaId], map: "matricula_id")
+  @@map("pagamentos")
+}
+
+enum AlunoStatus {
+  ativo
+  inativo
+}
+
+enum StatusPagamento {
+  pendente
+  pago
+}
