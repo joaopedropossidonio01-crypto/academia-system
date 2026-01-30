@@ -56,3 +56,22 @@ export async function criarMatricula(req: Request, res: Response) {
     return res.status(500).json({ error: 'Erro ao criar matrícula' });
   }
 }
+
+// --- FUNÇÃO ADICIONADA PARA CORRIGIR O ERRO ---
+export async function listarMatriculas(req: Request, res: Response) {
+  try {
+    const matriculas = await prisma.matricula.findMany({
+      include: {
+        aluno: true,
+        plano: true,
+      },
+      orderBy: {
+        dataInicio: 'desc'
+      }
+    });
+    return res.json(matriculas);
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({ error: 'Erro ao listar matrículas' });
+  }
+}
