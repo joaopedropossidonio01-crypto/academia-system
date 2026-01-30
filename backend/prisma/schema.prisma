@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -36,12 +36,15 @@ model Matricula {
   planoId    Int         @map("plano_id")
   dataInicio DateTime    @map("data_inicio") @db.Date
   dataFim    DateTime?   @map("data_fim") @db.Date
-  aluno      Aluno       @relation(fields: [alunoId], references: [id], onUpdate: Restrict, map: "matriculas_ibfk_1")
-  plano      Plano       @relation(fields: [planoId], references: [id], onUpdate: Restrict, map: "matriculas_ibfk_2")
+  
+  // Relações (Removido o map: ibfk que é do MySQL)
+  aluno      Aluno       @relation(fields: [alunoId], references: [id], onUpdate: Restrict)
+  plano      Plano       @relation(fields: [planoId], references: [id], onUpdate: Restrict)
+  
   pagamentos Pagamento[]
 
-  @@index([alunoId], map: "aluno_id")
-  @@index([planoId], map: "plano_id")
+  @@index([alunoId], map: "idx_matricula_aluno")
+  @@index([planoId], map: "idx_matricula_plano")
   @@map("matriculas")
 }
 
@@ -51,9 +54,11 @@ model Pagamento {
   valor           Decimal         @db.Decimal(10, 2)
   dataVencimento  DateTime        @map("data_vencimento") @db.Date
   statusPagamento StatusPagamento @default(pendente) @map("status_pagamento")
-  matricula       Matricula       @relation(fields: [matriculaId], references: [id], onUpdate: Restrict, map: "pagamentos_ibfk_1")
+  
+  // Relações
+  matricula       Matricula       @relation(fields: [matriculaId], references: [id], onUpdate: Restrict)
 
-  @@index([matriculaId], map: "matricula_id")
+  @@index([matriculaId], map: "idx_pagamento_matricula")
   @@map("pagamentos")
 }
 
