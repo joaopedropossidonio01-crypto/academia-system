@@ -2,10 +2,9 @@ import axios from 'axios'
 
 // Configuração da API
 export const api = axios.create({
-  // 🚀 MUDANÇA AQUI: Link de Produção (Nuvem)
-  // Se o seu link do Render for diferente, cole ele aqui dentro das aspas
-  baseURL: 'https://academia-api.onrender.com', 
-  timeout: 10000,
+  // 🚀 LINK CORRETO DO RENDER
+  baseURL: 'https://academia-system-hiyr.onrender.com', 
+  timeout: 15000, // Aumentei um pouco o tempo pois o servidor grátis pode demorar
   headers: { 'Content-Type': 'application/json' },
 })
 
