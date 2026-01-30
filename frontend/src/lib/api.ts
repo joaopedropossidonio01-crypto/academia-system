@@ -2,8 +2,9 @@ import axios from 'axios'
 
 // Configuração da API
 export const api = axios.create({
-  // --- ATENÇÃO AQUI: Mudamos de 3000 para 3001 ---
-  baseURL: 'http://localhost:3001', 
+  // 🚀 MUDANÇA AQUI: Link de Produção (Nuvem)
+  // Se o seu link do Render for diferente, cole ele aqui dentro das aspas
+  baseURL: 'https://academia-api.onrender.com', 
   timeout: 10000,
   headers: { 'Content-Type': 'application/json' },
 })
