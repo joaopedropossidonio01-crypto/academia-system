@@ -2,9 +2,9 @@ import axios from 'axios'
 
 // Configuração da API
 export const api = axios.create({
-  // 🚀 LINK CORRETO DO RENDER
-  baseURL: 'https://academia-system-hiyr.onrender.com', 
-  timeout: 15000, // Aumentei um pouco o tempo pois o servidor grátis pode demorar
+  // 🚀 CORRIGIDO: Agora aponta para o servidor que funciona (odik)
+  baseURL: 'https://academia-api-odik.onrender.com', 
+  timeout: 15000, 
   headers: { 'Content-Type': 'application/json' },
 })
 
